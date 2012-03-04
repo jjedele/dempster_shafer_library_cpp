@@ -26,11 +26,7 @@ int main(int argc, char** argv) {
 
 	// create Dempster-Shafer universe
 	DempsterShaferUniverse universe;
-	universe.add_hypothesis(&fear);
-	universe.add_hypothesis(&surprise);
-	universe.add_hypothesis(&disdain);
-	universe.add_hypothesis(&disgust);
-	universe.add_hypothesis(&anger);
+	universe.add_hypotheseses(&fear, &surprise, &disdain, &disgust, &anger, NULL);
 
 	// create evidences
 	// TODO: which masses to take?

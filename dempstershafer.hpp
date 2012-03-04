@@ -26,7 +26,8 @@ class DempsterShaferUniverse {
 		int last_hypothesis_number;
 	public:
 		DempsterShaferUniverse();
-		void add_hypothesis(void* hypothesis);
+		void add_hypotheseses(set<void*>& hypotheseses);
+		void add_hypotheseses(void* hypothesis, ...);
 		Evidence add_evidence();
 	friend class Evidence;
 };

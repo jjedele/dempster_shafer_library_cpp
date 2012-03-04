@@ -16,12 +16,28 @@ DempsterShaferUniverse::DempsterShaferUniverse() :
 	last_hypothesis_number(0) {
 }
 
-void DempsterShaferUniverse::add_hypothesis(void* hypothesis) {
-	if(last_hypothesis_number>=MAX_HYPOTHESESES-1) {
-		throw "Only MAX_HYPOTHESESES hypotheseses allowed in this version.";
-	}
+void DempsterShaferUniverse::add_hypotheseses(set<void*>& hypotheseses) {
+	for(set<void*>::iterator i=hypotheseses.begin(); i!=hypotheseses.end(); i++) {
+		if(last_hypothesis_number>=MAX_HYPOTHESESES-1) {
+			throw "Only MAX_HYPOTHESESES hypotheseses allowed in this version.";
+		}
 
-	hypotheseses[last_hypothesis_number++] = hypothesis;
+		this->hypotheseses[last_hypothesis_number++] = *i;
+	}
+}
+
+void DempsterShaferUniverse::add_hypotheseses(void* hypothesis, ...) {
+	va_list argument_list;
+	void *current;
+	set<void*> hypotheseses;
+
+	va_start(argument_list, hypothesis);
+	for(current=hypothesis; current!=NULL; current=va_arg(argument_list, void*)) {
+		hypotheseses.insert(current);
+	}
+	va_end(argument_list);
+
+	add_hypotheseses(hypotheseses);
 }
 
 Evidence DempsterShaferUniverse::add_evidence() {

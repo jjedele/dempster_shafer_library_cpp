@@ -46,15 +46,7 @@ int main(int argc, char** argv) {
 
 	// create Dempster-Shafer Universe
 	DempsterShaferUniverse universe;
-	universe.add_hypothesis(&karl);
-	universe.add_hypothesis(&eveline);
-	universe.add_hypothesis(&albert);
-	universe.add_hypothesis(&helga);
-	universe.add_hypothesis(&johannes);
-	universe.add_hypothesis(&ludwig);
-	universe.add_hypothesis(&peter);
-	universe.add_hypothesis(&frank);
-	universe.add_hypothesis(&monika);
+	universe.add_hypotheseses(&karl, &eveline, &albert, &helga, &johannes, &ludwig, &peter, &frank, &monika, NULL);
 
 	// create evidences
 	Evidence witness1 = universe.add_evidence();
