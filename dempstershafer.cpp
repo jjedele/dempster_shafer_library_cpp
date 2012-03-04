@@ -95,7 +95,7 @@ void Evidence::add_omega_set() {
 	}
 }
 
-Evidence Evidence::operator&(Evidence other) {
+Evidence Evidence::operator&(Evidence& other) {
 	Evidence combined_ev(universe);
 	list<FocalSet> set_buffer;
 	double conflict = 0.0;
@@ -119,6 +119,20 @@ Evidence Evidence::operator&(Evidence other) {
 	}
 
 	return combined_ev;
+}
+
+double Evidence::conflict(Evidence& other) {
+	double conflict = 0.0;
+
+	for(list<FocalSet>::iterator i=focal_sets.begin(); i!=focal_sets.end(); i++) {
+		for(list<FocalSet>::iterator j=other.focal_sets.begin(); j!=other.focal_sets.end(); j++) {
+			if( (i->items & j->items).none() ) {
+				conflict += i->mass * j->mass;
+			}
+		}
+	}
+
+	return conflict;
 }
 
 double Evidence::belief(set<void*>& members) {
@@ -191,8 +205,30 @@ double Evidence::plausability(void *member, ...) {
 	return plausability(given_items);
 }
 
+void* Evidence::most_believable() {
+	double largest_belief = -1.0;
+	int largest_belief_index = 0;
+
+	for(int j=0; j<universe->last_hypothesis_number; j++) {
+		double belief = 0.0;
+		for(list<FocalSet>::iterator i=focal_sets.begin(); i!=focal_sets.end(); i++) {
+			if( i->items.test(j) && i->items.count()==1 ) {
+				// current item is the only on in focal set
+				belief += i->mass;
+			}
+		}
+
+		if(belief > largest_belief) {
+			largest_belief = belief;
+			largest_belief_index = j;
+		}
+	}
+
+	return universe->hypotheseses[largest_belief_index];
+}
+
 void* Evidence::most_plausible() {
-	double largest_plausability = 0.0;
+	double largest_plausability = -1.0;
 	int largest_plausability_index = 0;
 
 	for(int j=0; j<universe->last_hypothesis_number; j++) {
@@ -203,7 +239,7 @@ void* Evidence::most_plausible() {
 			}
 		}
 
-		if(plausability >= largest_plausability) {
+		if(plausability > largest_plausability) {
 			largest_plausability = plausability;
 			largest_plausability_index = j;
 		}

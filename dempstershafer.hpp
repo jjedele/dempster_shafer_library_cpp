@@ -42,11 +42,13 @@ class Evidence {
 		void add_focal_set(double mass, void *member, ...);
 		void add_focal_set(double mass, set<void*>& members);
 		void add_omega_set();
-		Evidence operator&(Evidence other);
+		Evidence operator&(Evidence& other);
+		double conflict(Evidence& other);
 		double belief(set<void*>& members);
 		double belief(void *member, ...);
 		double plausability(void *member, ...);
 		double plausability(set<void*>& members);
+		void* most_believable();
 		void* most_plausible();
 		void pretty_print(string (*hypothesis_to_string)(void *element));
 	friend class DempsterShaferUniverse;

@@ -67,6 +67,7 @@ int main(int argc, char** argv) {
 	// give some values for validation
 	combined_evidence.pretty_print(&hypothesis_to_string_function);
 	cout << "Belief(Eveline) = " << combined_evidence.belief(&eveline, NULL) << endl;
+	cout << "Belief(Monika) = " << combined_evidence.belief(&monika, NULL) << endl;
 	cout << "Belief(Johannes) = " << combined_evidence.belief(&johannes, NULL) << endl;
 	cout << "Plausability(Johannes) = " << combined_evidence.plausability(&johannes, NULL) << endl;
 	// var-arg notation
@@ -77,6 +78,10 @@ int main(int argc, char** argv) {
 	not_johannes.insert(&ludwig); not_johannes.insert(&peter); not_johannes.insert(&frank); not_johannes.insert(&monika);
 	cout << "Plausability(~Johannes) = " << combined_evidence.plausability(not_johannes) << endl;
 
+	// conflict between to evidences
+	cout << "Conflict between witness 1 and 2: " << witness1.conflict(witness2) << endl;
+
 	// find the bad boy/girl
-	cout << hypothesis_to_string_function(combined_evidence.most_plausible()) << " did it!" << endl;
+	cout << hypothesis_to_string_function(combined_evidence.most_believable()) << " is most believable!" << endl;
+	cout << hypothesis_to_string_function(combined_evidence.most_plausible()) << " is most plausible!" << endl;
 }
