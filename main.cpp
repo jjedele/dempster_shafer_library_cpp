@@ -33,7 +33,6 @@ int main(int argc, char** argv) {
 	universe.add_hypothesis(&anger);
 
 	// create evidences
-	// TODO: create all six evidences
 	// TODO: which masses to take?
 	Evidence large_eye_aperture = universe.add_evidence();
 	large_eye_aperture.add_focal_set(0.8, &fear, &surprise, NULL);
