@@ -17,16 +17,16 @@ class CSVReader {
 	private:
 		vector<string> headers;
 		vector< vector<int> > columns;
-		int getHeaderIndex(string name);
+		int get_header_index(string name);
 	public:
-		int numberOfColumns();
-		int numberOfRows();
-		vector<string> getHeaders();
-		string getHeaderAt(int column);
+		int number_of_columns();
+		int number_of_rows();
+		vector<string> get_headers();
+		string get_header(int column);
 		CSVReader(char* fileName);
-		int getValue(int row, int column);
-		int getValue(int row, string column);
-		vector<int> getColumn(int column);
-		vector<int> getColumn(string column);
-		vector<int> getRow(int row);
+		int get_value(int row, int column);
+		int get_value(int row, string column);
+		vector<int> get_column(int column);
+		vector<int> get_column(string column);
+		vector<int> get_row(int row);
 };

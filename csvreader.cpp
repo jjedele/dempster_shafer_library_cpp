@@ -61,39 +61,47 @@ CSVReader::CSVReader(char* filename) {
 	}
 }
 
-int CSVReader::numberOfColumns() {
+int CSVReader::number_of_columns() {
 	return headers.size();
 }
 
-int CSVReader::numberOfRows() {
+int CSVReader::number_of_rows() {
 	return columns.at(0).size();
 }
 
-vector<string> CSVReader::getHeaders() {
+vector<string> CSVReader::get_headers() {
 	return headers;
 }
 
-string CSVReader::getHeaderAt(int column) {
+string CSVReader::get_header(int column) {
 	return headers.at(column);
 }
 
-int CSVReader::getValue(int row, int column) {
+int CSVReader::get_value(int row, int column) {
 	return columns.at(column).at(row);
 }
 
-int CSVReader::getValue(int row, string column) {
-	return getValue(row, getHeaderIndex(column));
+int CSVReader::get_value(int row, string column) {
+	int index;
+	if ((index = get_header_index(column)) != -1)
+		return get_value(row, index);
+	else
+		throw "Header not found!";
 }
 
-vector<int> CSVReader::getColumn(int column) {
+vector<int> CSVReader::get_column(int column) {
 	return columns.at(column);
 }
 
-vector<int> CSVReader::getColumn(string column) {
-	return getColumn(getHeaderIndex(column));
+vector<int> CSVReader::get_column(string column) {
+	int index;
+	if ((index = get_header_index(column)) != -1)
+		return get_column(get_header_index(column));
+	else
+		throw "Header not found!";
 }
 
-vector<int> CSVReader::getRow(int row) {
+vector<int> CSVReader::get_row(int row) {
 	vector<int> rowvec;
 	for (int i = 0; i < headers.size(); i++) {
 		rowvec.push_back(columns.at(i).at(row));
@@ -101,7 +109,7 @@ vector<int> CSVReader::getRow(int row) {
 	return rowvec;
 }
 
-int CSVReader::getHeaderIndex(string name) {
+int CSVReader::get_header_index(string name) {
 	for (int i = 0; i < headers.size(); i++) {
 		if (headers.at(i).compare(name) == 0)
 			return i;

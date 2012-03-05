@@ -19,22 +19,22 @@
  	}
 
  	CSVReader test(argv[1]);
- 	cout << "Number of columns: " << test.numberOfColumns() << endl;
- 	cout << "Number of rows: " << test.numberOfRows() << endl;
+ 	cout << "Number of columns: " << test.number_of_columns() << endl;
+ 	cout << "Number of rows: " << test.number_of_rows() << endl;
 
  	cout << "Printing the Header" << endl;
- 	for (int i = 0; i < test.numberOfColumns(); i++) {
- 		cout << "\tHeader " << i << ": " << test.getHeaderAt(i) << endl;
+ 	for (int i = 0; i < test.number_of_columns(); i++) {
+ 		cout << "\tHeader " << i << ": " << test.get_header(i) << endl;
  	}
 
  	cout << "Printing the first row of the csv file" << endl;
 
- 	vector<int> row = test.getRow(0);
- 	for (int i = 0; i < test.numberOfColumns(); i++) {
+ 	vector<int> row = test.get_row(0);
+ 	for (int i = 0; i < test.number_of_columns(); i++) {
  		cout << "\tColumn " << i << ": " << row.at(i) << endl;
  	}
 
- 	cout << "Value of sixth row in column \"Frame\": " << test.getValue(5, "Frame") << endl;
+ 	cout << "Value of sixth row in column \"Frame\": " << test.get_value(5, "Frame") << endl;
 
  	return EXIT_SUCCESS;
  }
