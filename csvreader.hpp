@@ -24,9 +24,8 @@ using namespace std;
  */
 class CSVReader {
 	private:
-		vector<string> headers;
 		vector< vector<int> > columns;
-		int get_header_index(string name);
+		int header_index(string name);
 	public:
 		/**
 		 * Returns the number of columns in the loaded csv file.
@@ -46,14 +45,14 @@ class CSVReader {
 		 *
 		 * @return A vector of strings containing the header definitions.
 		 */
-		vector<string> get_headers();
+		vector<string> headers;
 		/**
 		 * Returns the name of the column at a given index.
 		 *
 		 * @param column The index of the column to be returned.
 		 * @return The name of the column.
 		 */
-		string get_header(int column);
+		string header(int column);
 		/**
 		 * Creates a new instance of the csv reader. The csv file is automatically
 		 * loaded.
@@ -61,7 +60,7 @@ class CSVReader {
 		 * @param fileName File name of the csv file relative to the path of the 
 		 * 								 program.
 		 */
-		CSVReader(char* fileName);
+		CSVReader(string fileName);
 		/**
 		 * Returns the value stored in the csv file at a given cell.
 		 *
@@ -69,7 +68,7 @@ class CSVReader {
 		 * @param column The index of the column to select.
 		 * @return The value stored at the given cell.
 		 */
-		int get_value(int row, int column);
+		int value(int row, int column);
 		/**
 		 * Returns the value stored in the csv file at a given cell.
 		 *
@@ -77,26 +76,26 @@ class CSVReader {
 		 * @param column The name of the column to select.
 		 * @return The value stored at the given cell.
 		 */
-		int get_value(int row, string column);
+		int value(int row, string column);
 		/**
 		 * Returns a vector of integers stored at a given column.
 		 *
 		 * @param column The index of the column to be returned.
 		 * @return A vector of integers stored at a given column.
 		 */
-		vector<int> get_column(int column);
+		vector<int> column(int column);
 		/**
 		 * Returns a vector of integers stored at a given column.
 		 *
 		 * @param column The name of the column to be returned.
 		 * @return A vector of integers stored at a given column.
 		 */
-		vector<int> get_column(string column);
+		vector<int> column(string column);
 		/**
 		 * Returns a vector of integers stored at a given row.
 		 *
 		 * @param row The index of the column to be returned.
 		 * @return A vector of integers stored at a given row.
 		 */
-		vector<int> get_row(int row);
+		vector<int> row(int row);
 };

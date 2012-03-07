@@ -24,17 +24,17 @@
 
  	cout << "Printing the Header" << endl;
  	for (int i = 0; i < test.number_of_columns(); i++) {
- 		cout << "\tHeader " << i << ": " << test.get_header(i) << endl;
+ 		cout << "\tHeader " << i << ": " << test.header(i) << endl;
  	}
 
  	cout << "Printing the first row of the csv file" << endl;
 
- 	vector<int> row = test.get_row(0);
+ 	vector<int> row = test.row(0);
  	for (int i = 0; i < test.number_of_columns(); i++) {
  		cout << "\tColumn " << i << ": " << row.at(i) << endl;
  	}
 
- 	cout << "Value of sixth row in column \"Frame\": " << test.get_value(5, "Frame") << endl;
+ 	cout << "Value of sixth row in column \"Frame\": " << test.value(5, "Frame") << endl;
 
  	return EXIT_SUCCESS;
  }

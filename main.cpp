@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
 
 	// classify the frames
 	for(int i=1; i<csv.number_of_rows(); i++) {
-		vector<int> frame = csv.get_row(i);
+		vector<int> frame = csv.row(i);
 
 		// evidence for eye aperture
 		Evidence eye_aperture = universe.add_evidence();

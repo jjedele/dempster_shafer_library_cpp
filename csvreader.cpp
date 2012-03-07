@@ -9,8 +9,8 @@
 
 using namespace std;
 
-CSVReader::CSVReader(char* filename) {
-	ifstream csvFile(filename);
+CSVReader::CSVReader(string filename) {
+	ifstream csvFile(filename.c_str());
 	string line, header;
 	if (csvFile.is_open()) {
 		//Get the first line of the file (header)
@@ -69,39 +69,35 @@ int CSVReader::number_of_rows() {
 	return columns.at(0).size();
 }
 
-vector<string> CSVReader::get_headers() {
-	return headers;
-}
-
-string CSVReader::get_header(int column) {
+string CSVReader::header(int column) {
 	return headers.at(column);
 }
 
-int CSVReader::get_value(int row, int column) {
+int CSVReader::value(int row, int column) {
 	return columns.at(column).at(row);
 }
 
-int CSVReader::get_value(int row, string column) {
+int CSVReader::value(int row, string column) {
 	int index;
-	if ((index = get_header_index(column)) != -1)
-		return get_value(row, index);
+	if ((index = header_index(column)) != -1)
+		return value(row, index);
 	else
 		throw "Header not found!";
 }
 
-vector<int> CSVReader::get_column(int column) {
+vector<int> CSVReader::column(int column) {
 	return columns.at(column);
 }
 
-vector<int> CSVReader::get_column(string column) {
+vector<int> CSVReader::column(string column) {
 	int index;
-	if ((index = get_header_index(column)) != -1)
-		return get_column(get_header_index(column));
+	if ((index = header_index(column)) != -1)
+		return this->column(index);
 	else
 		throw "Header not found!";
 }
 
-vector<int> CSVReader::get_row(int row) {
+vector<int> CSVReader::row(int row) {
 	vector<int> rowvec;
 	for (int i = 0; i < headers.size(); i++) {
 		rowvec.push_back(columns.at(i).at(row));
@@ -109,7 +105,7 @@ vector<int> CSVReader::get_row(int row) {
 	return rowvec;
 }
 
-int CSVReader::get_header_index(string name) {
+int CSVReader::header_index(string name) {
 	for (int i = 0; i < headers.size(); i++) {
 		if (headers.at(i).compare(name) == 0)
 			return i;
