@@ -154,6 +154,13 @@ class Evidence {
 		 */
 		void* most_plausible();
 		/**
+		 * Searches and returns the single hypothesis with the largest belief.
+		 * If several hypotheseses with the same belief are found, the one with the highest plausability is returned.
+		 *
+		 * @return A pointer to the hypothesis object selected like described above.
+		 */
+		void* best_match();
+		/**
 		 * Prints a human readable representation of the evidence to the standard output.
 		 *
 		 * @param hypothesis_to_string A pointer to a function that receives a pointer to a hypothesis object and returns

@@ -2,8 +2,8 @@
 # Thilo Michael, Jeffrey Jedele
 # 2012
 
-lab_exercise : main.cpp dempstershafer.cpp
-	g++ -o lab_exercise main.cpp dempstershafer.cpp
+lab_exercise : main.cpp dempstershafer.cpp csvreader.cpp learningclassificator.cpp
+	g++ -o lab_exercise main.cpp dempstershafer.cpp csvreader.cpp learningclassificator.cpp
 
 test_exam_1 : test_wbs_exam.cpp dempstershafer.cpp
 	g++ -o test_exam_1 test_wbs_exam.cpp dempstershafer.cpp

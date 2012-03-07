@@ -248,6 +248,34 @@ void* Evidence::most_plausible() {
 	return universe->hypotheseses[largest_plausability_index];
 }
 
+void* Evidence::best_match() {
+	double largest_belief = -1.0;
+	double largest_plausability = -1.0;
+	int best_match_index = 0;
+
+	for(int j=0; j<universe->last_hypothesis_number; j++) {
+		double belief = 0.0;
+		double plausability = 0.0;
+		for(list<FocalSet>::iterator i=focal_sets.begin(); i!=focal_sets.end(); i++) {
+			if(i->items.test(j)) {
+				plausability += i->mass;
+				if(i->items.count() == 1) {
+					// current item is the only one in focal set
+					belief += i->mass;
+				}
+			}
+		}
+
+		if(belief > largest_belief || (belief == largest_belief && plausability > largest_plausability)) {
+			largest_belief = belief;
+			largest_plausability = plausability;
+			best_match_index = j;
+		}
+	}
+
+	return universe->hypotheseses[best_match_index];
+}
+
 void Evidence::pretty_print(string (*hypothesis_to_string)(void *element)) {
 	cout << "--- Evidence ---" << endl;
 	for(list<FocalSet>::iterator i=focal_sets.begin(); i!=focal_sets.end(); i++) {
