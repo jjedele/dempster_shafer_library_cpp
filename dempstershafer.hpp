@@ -26,7 +26,7 @@ typedef struct {
 
 /**
  * This class represents the basic collection of all hypotheses and is used to
- * create evidences using those.
+ * create evidences using them.
  */
 class DempsterShaferUniverse {
 	private:
@@ -42,6 +42,7 @@ class DempsterShaferUniverse {
 		 * need and return the same pointers that are added here.
 		 *
 		 * @param hypotheseses A reference to a set of pointers to arbitrary hypothesis objects.
+		 * @throws 1 if more hypotheseses than allowed by MAX_HYPOTHESESES are added
 		 */
 		void add_hypotheseses(set<void*>& hypotheseses);
 		/**
@@ -60,6 +61,22 @@ class DempsterShaferUniverse {
 		 * @return The new Evidence.
 		 */
 		Evidence add_evidence();
+		/**
+		 * Translates a set of hypotheseses to the internally used bitset representation.
+		 * This can be used to save performance when the same set of hypotheseses is used several times.
+		 *
+		 * @param members A reference to a set of hypothesis-pointers.
+		 * @return The bitset with MAX_HYPOTHESESES positions.
+		 */
+		bitset<MAX_HYPOTHESESES> bitset_representation(set<void*>& members);
+		/**
+		 * Translates a set of hypotheseses to the internally used bitset representation.
+		 * This can be used to save performance when the same set of hypotheseses is used several times.
+		 *
+		 * @param member A variable length list of hypothesis-pointers. MUST be terminated with NULL.
+		 * @return The bitset with MAX_HYPOTHESESES positions.
+		 */
+		bitset<MAX_HYPOTHESESES> bitset_representation(void* member, ...);
 	friend class Evidence;
 };
 
@@ -74,6 +91,15 @@ class Evidence {
 		Evidence(DempsterShaferUniverse *universe);
 		void add_focal_set(FocalSet set);
 	public:
+		/**
+		 * Add a set of hypotheseses to the evidence and assign a mass to it.
+		 * If not all mass is distributed to focal sets, add_omega_set() must be called to finish the evidence.
+		 *
+		 * @param mass The mass that is assigned to the set.
+		 * @param members A set of hypotheseses in bitset representation. May be obtained by the bitset_representation() methods of
+		 * 		DempsterShaferUniverse.
+		 */
+		void add_focal_set(double mass, bitset<MAX_HYPOTHESESES>& members);
 		/**
 		 * Add a set of hypotheseses to the evidence and assign a mass to it.
 		 * If not all mass is distributed to focal sets, add_omega_set() must be called to finish the evidence.
@@ -110,6 +136,14 @@ class Evidence {
 		/**
 		 * Calculates the belief for a set of hypotheseses.
 		 *
+		 * @param members A reference to a set of hypotheseses in the internally used bitset representation. May be obtained with the
+		 * 		bitset_representation() methods of DempsterShaferUniverse.
+		 * @return The calculated belief.
+		 */
+		double belief(bitset<MAX_HYPOTHESESES>& members);
+		/**
+		 * Calculates the belief for a set of hypotheseses.
+		 *
 		 * @param members A reference to a set of hypothesis object pointers.
 		 * @return The calculated belief.
 		 */
@@ -123,6 +157,14 @@ class Evidence {
 		 * @return The calculated belief.
 		 */
 		double belief(void *member, ...);
+		/**
+		 * Calculates the plausability for a set of hypotheseses.
+		 *
+		 * @param members A reference to a set of hypotheses in the internally used bitset representation. My be obtained with the
+		 * 		bitset_representation() mathods of DempsterShaferUniverse().
+		 * @return The calculated plausability.
+		 */
+		double plausability(bitset<MAX_HYPOTHESESES>& members);
 		/**
 		 * Calculates the plausability for a set of hypotheseses.
 		 *

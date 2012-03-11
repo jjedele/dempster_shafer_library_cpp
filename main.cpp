@@ -38,7 +38,11 @@ string anger("anger");
 
 int main(int argc, char** argv) {
 	// create the CSV reader
-	CSVReader csv("./test_data.csv");
+	if(argc < 2) {
+		cerr << "Provide .csv file with video data as argument!" << endl;
+		return EXIT_FAILURE;
+	}
+	CSVReader csv(argv[1]);
 
 	// create Dempster-Shafer universe
 	DempsterShaferUniverse universe;
@@ -50,41 +54,57 @@ int main(int argc, char** argv) {
 	const int MOUTH_OPENING = classificator.add_feature(23.0);
 	const int FURROW_COUNT = classificator.add_feature(527.0);
 
+	// create bitset representations of emotions sets to save performance while classifying video frames
+	bitset<MAX_HYPOTHESESES> fear_and_surprise = universe.bitset_representation(&fear, &surprise, NULL);
+	bitset<MAX_HYPOTHESESES> disdain_and_disgust = universe.bitset_representation(&disdain, &disgust, NULL);
+	bitset<MAX_HYPOTHESESES> only_surprise = universe.bitset_representation(&surprise, NULL);
+	bitset<MAX_HYPOTHESESES> anger_and_disgust = universe.bitset_representation(&anger, &disgust, NULL);
+	bitset<MAX_HYPOTHESESES> only_anger = universe.bitset_representation(&anger, NULL);
+
 	// classify the frames
-	for(int i=1; i<csv.number_of_rows(); i++) {
+	for(int i=0; i<csv.number_of_rows(); i++) {
 		vector<int> frame = csv.row(i);
 
 		// evidence for eye aperture
 		Evidence eye_aperture = universe.add_evidence();
 		double eye_aperture_classification = classificator.classify(EYE_APERTURE, frame.at(1));
+		eye_aperture_classification *= 0.9; // we don't want 1.0 as mass
 		if(eye_aperture_classification >= 0.0) {
-			eye_aperture.add_focal_set(eye_aperture_classification, &fear, &surprise, NULL);
+			// large eye aperture
+			eye_aperture.add_focal_set(eye_aperture_classification, fear_and_surprise);
 		} else {
-			eye_aperture.add_focal_set(-eye_aperture_classification, &disdain, &disgust, NULL);
+			// small eye aperture
+			eye_aperture.add_focal_set(-eye_aperture_classification, disdain_and_disgust);
 		}
 		eye_aperture.add_omega_set();
 
 		// evidence for mouth opening
 		Evidence mouth_opening = universe.add_evidence();
 		double mouth_opening_classification = classificator.classify(MOUTH_OPENING, frame.at(2));
+		mouth_opening_classification *= 0.9; // we don't want 1.0 as mass
 		if(mouth_opening_classification >= 0.0) {
-			mouth_opening.add_focal_set(mouth_opening_classification, &surprise, NULL);
+			// large mouth opening
+			mouth_opening.add_focal_set(mouth_opening_classification, only_surprise);
 		} else {
-			mouth_opening.add_focal_set(-mouth_opening_classification, &anger, &disgust, NULL);
+			// small mouth opening
+			mouth_opening.add_focal_set(-mouth_opening_classification, anger_and_disgust);
 		}
 		mouth_opening.add_omega_set();
 
 		// evidence for furrow count
 		Evidence furrow_count = universe.add_evidence();
 		double furrow_count_classification = classificator.classify(FURROW_COUNT, frame.at(3));
+		furrow_count_classification *= 0.9; // we don't want 1.0 as mass
 		if(furrow_count_classification >= 0.0) {
-			furrow_count.add_focal_set(furrow_count_classification, &fear, &surprise, NULL);
+			// many furrows
+			furrow_count.add_focal_set(furrow_count_classification, fear_and_surprise);
 		} else {
-			furrow_count.add_focal_set(-furrow_count_classification, &anger, NULL);
+			// few furrows
+			furrow_count.add_focal_set(-furrow_count_classification, only_anger);
 		}
 		furrow_count.add_omega_set();
 
-		// combined the features
+		// combine the features
 		Evidence combined_features = eye_aperture & mouth_opening & furrow_count;
 
 		// find the most plausible emotion
@@ -113,7 +133,7 @@ string hypothesis_to_string_function(void* element) {
 	return *s;
 }
 
-// this is ugly and just for debugging + demonstration
+// very ugly code for debugging + demonstration below here
 void print_frame_stats(int frame_no,
 				int eye_value,
 				int mouth_value,
@@ -126,6 +146,7 @@ void print_frame_stats(int frame_no,
 				Evidence& furrow_evidence,
 				Evidence& combined)
 {
+	printf("---------------------------------\n");
 	printf("### Frame: %03d ###\n", frame_no);
 	printf("---------------------------------\n");
 	printf("(-1.0: far below average, +1.0 far above average)\n");
