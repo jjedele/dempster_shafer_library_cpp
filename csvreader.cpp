@@ -27,7 +27,7 @@ CSVReader::CSVReader(string filename) {
 				start = i+1;
 			}
 		}
-		headers.push_back(header.substr(start, header.length()-start));
+		headers.push_back(header.substr(start, header.length()-1-start));
 
 		//Create the columns
 		vector<int> *dummy;
@@ -51,7 +51,7 @@ CSVReader::CSVReader(string filename) {
 					start = i+1;
 				}
 			}
-			columns.at(counter).push_back(atoi(line.substr(start, line.length()-start).c_str()));
+			columns.at(counter).push_back(atoi(line.substr(start, line.length()-1-start).c_str()));
 			if (counter+1 != headers.size()) {
 				throw ("Error parsing csv file!");
 			}
