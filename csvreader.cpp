@@ -59,6 +59,7 @@ CSVReader::CSVReader(string filename) {
 	} else {
 		throw "Could not open csv file!";
 	}
+	csvFile.close();
 }
 
 int CSVReader::number_of_columns() {
