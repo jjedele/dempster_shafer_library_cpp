@@ -9,38 +9,37 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include <assert.h>
 
 using namespace std;
 
 int main(int argc, char** argv) {
-	//Check number of arguments
-	if (argc < 2) {
-		printf("Invalid number of arguments. Usage:\n\t %s [csv-file]", argv[0]);
-		return EXIT_FAILURE;
-	}
+	string csvFile("test_data.csv");
 
-	//Create new instance of CSVReader using parameter provided
-	CSVReader test(argv[1]);
+	//Create new instance of CSVReader using the file test_data.csvv
+	CSVReader test(csvFile);
 
-	//Output general information about the CSV file
-	cout << "Number of columns: " << test.number_of_columns() << endl;
-	cout << "Number of rows: " << test.number_of_rows() << endl;
+	//Testing general information about the CSV file
+	assert(test.number_of_columns() == 4);
+	assert(test.number_of_rows() == 50);
 
-	//Printing the header (first row in the csv file)
-	cout << "Printing the header" << endl;
-	for (int i = 0; i < test.number_of_columns(); i++) {
-		cout << "\tHeader " << i << ": " << test.header(i) << endl;
-	}
+	//Testing the header definitions
+	assert(test.header(0).compare("Frame") == 0);
+	assert(test.header(1).compare("Augenoeffnung") == 0);
+	assert(test.header(2).compare("Mundoeffnung") == 0);
+	assert(test.header(3).compare("Stirnfalten") == 0);
 
-	//Printing the first row of the data part of the CSV file
-	cout << "Printing the first row of the csv file" << endl;
+	//Testing the first row of the data part of the CSV file
 	vector<int> row = test.row(0);
-	for (int i = 0; i < test.number_of_columns(); i++) {
-		cout << "\tColumn " << i << ": " << row.at(i) << endl;
-	}
+	assert(row.at(0) == 1);
+	assert(row.at(1) == 15);
+	assert(row.at(2) == 10);
+	assert(row.at(3) == 291);
 
 	//Fetching a value by it's column header and row index
-	cout << "Value of sixth row in column \"Frame\": " << test.value(5, "Frame") << endl;
+	assert(test.value(5, "Frame") == 6);
+
+	cout << "Success!" << endl;
 
 	return EXIT_SUCCESS;
 }
