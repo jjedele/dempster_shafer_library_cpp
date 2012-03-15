@@ -59,6 +59,9 @@ class CSVReader {
 		 *
 		 * @param fileName File name of the csv file relative to the path of the 
 		 * 								 program.
+		 * @throws 1 When first row of the file is empty
+		 * @throws 2 When a row has too few values
+		 * @throws 3 When the file could not be opened
 		 */
 		CSVReader(string fileName);
 		/**
@@ -75,6 +78,7 @@ class CSVReader {
 		 * @param row The index of the row to select.
 		 * @param column The name of the column to select.
 		 * @return The value stored at the given cell.
+		 * @throws 1 When the name of the column is not found
 		 */
 		int value(int row, string column);
 		/**
@@ -89,6 +93,7 @@ class CSVReader {
 		 *
 		 * @param column The name of the column to be returned.
 		 * @return A vector of integers stored at a given column.
+		 * @throws 1 When the name of the column is not found.
 		 */
 		vector<int> column(string column);
 		/**

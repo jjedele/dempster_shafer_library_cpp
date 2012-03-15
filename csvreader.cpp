@@ -17,7 +17,7 @@ CSVReader::CSVReader(string filename) {
 		getline(csvFile, header);
 		//Check the length of the header
 		if (header.length() == 0) {
-			throw "Header is empty!";
+			throw 1;
 		}
 		//Extract the header fields
 		int start = 0;
@@ -53,11 +53,11 @@ CSVReader::CSVReader(string filename) {
 			}
 			columns.at(counter).push_back(atoi(line.substr(start, line.length()-1-start).c_str()));
 			if (counter+1 != headers.size()) {
-				throw ("Error parsing csv file!");
+				throw 2;
 			}
 		}
 	} else {
-		throw "Could not open csv file!";
+		throw 3;
 	}
 	csvFile.close();
 }
@@ -83,7 +83,7 @@ int CSVReader::value(int row, string column) {
 	if ((index = header_index(column)) != -1)
 		return value(row, index);
 	else
-		throw "Header not found!";
+		throw 1;
 }
 
 vector<int> CSVReader::column(int column) {
@@ -95,7 +95,7 @@ vector<int> CSVReader::column(string column) {
 	if ((index = header_index(column)) != -1)
 		return this->column(index);
 	else
-		throw "Header not found!";
+		throw 1;
 }
 
 vector<int> CSVReader::row(int row) {
