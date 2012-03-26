@@ -1,0 +1,118 @@
+<p>KBS Lab-Exercise E019</p>
+<p>Emotion Classifier - based on Evidence Theory by Dempster-Shafer</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>Thilo Michael</p>
+<p>thilo.michael@gmail.com</p>
+<p>#0450945</p>
+<p>Jeffrey Jedele</p>
+<p>jeffrey.jedele@gmail.com</p>
+<p>#0491204</p>
+<h1 id="section"></h1>
+<h1 id="revision-history">Revision History</h1>
+<p></p>
+<p>Date</p>
+<p>Comment</p>
+<p>Author</p>
+<p>2012-03-04</p>
+<p>Initial</p>
+<p>Jeffrey Jedele</p>
+<p>2012-03-14</p>
+<p>CSV Reader &amp; Tests</p>
+<p>Thilo Michael</p>
+<h1 id="abstract">Abstract</h1>
+<p>With formal logic, every event can be either true or false. Bayesian Probability Theory extends this idea and allows us to assign a likelihood of being true to every possible event. Dempster-Shafer-Theory (DST) further generalizes this idea by:</p>
+<ol>
+<li>allowing the assignment of probability masses to sets of events rather than single events and</li>
+<li>providing methods to combine such distributions originating from different sources.</li>
+</ol>
+<p>A common use case is the fusion of sensor values or measurements.</p>
+<p></p>
+<p>Another example where different measurements must be combined is the classification of emotions based on pictures. Digital image processing methods can be used to extract several features from pictures of human faces, e.g. mouth opening, eye aperture and number of furrows. These features allow the assessment of the emotion shown by the photographed face.</p>
+<p></p>
+<p>The goal of this exercise is to develop a emotion classifier that reads a list of the above mentioned features and uses DST to find the most plausible emotion shown in the picture. Pre-extracted example data of 50 pictures is provided for this exercise - the extraction of the features from actual images is not in scope.</p>
+<p></p>
+<h1 id="table-of-contents">Table of contents</h1>
+<p><a href="#h.xpw2yivl5g8x">Architectural and Technical Overview</a></p>
+<p><a href="#h.xhi5wtjmy1b">Build and Execution</a></p>
+<p><a href="#h.2wt8hkvmgwf1">Invocation Example:</a></p>
+<p><a href="#h.5omtmwhtc1hn">Output Example:</a></p>
+<p><a href="#h.yi9hlc7chcp">API Documentation</a></p>
+<p><a href="#h.iap9udh6dw2n">Test and Validation</a></p>
+<p><a href="#h.a1bk2ykksdkg">Summary</a></p>
+<p></p>
+<h1 id="architectural-and-technical-overview">Architectural and Technical Overview</h1>
+<p>The project is realized in C++ because it provides the flexibility to create widely usable libraries and the performance needed for video applications. No external libraries are used. The application logic is distributed over several parts - each one of them is reusable on it’s own.</p>
+<p></p>
+<p>Following APIs are provided:</p>
+<p>dempstershafer.hpp/cpp</p>
+<p>Contains all the Dempster-Shafer-Logic like creating evidences, combining evidences and calculating beliefs and plausabilities.</p>
+<p></p>
+<p>learningclassificator.hpp/cpp</p>
+<p>Contains the logic used to classify if values are large or small. It uses online learning to adjust the classification with the classified values.</p>
+<p></p>
+<p>csvreader.hpp/cpp</p>
+<p>Contains the logic needed to read .csv data files.</p>
+<p></p>
+<p>The Dempster-Shafer Library is designed to be very fast and to provide an easy to use and easy to read API at the same time. First, a DempsterShaferUniverse object is created and all hypotheseses are added to it. The API uses “untyped” pointers (void-pointers) as hypotheseses, so every kind of object can be used. All comparisons rely only on the memory address. The DempsterShaferUniverse can then be used to create instances of the Evidence class. These are used to add focal hypothesis-sets and to perform all other operations. Details can be found in the API documentation.</p>
+<p></p>
+<p>To detect emotions in videos, several features must be classified to be either large or small. The basic approach taken in this project, is to determine the mean of all values for a feature and classify values larger than the mean as large and values lesser than the mean as small. Because it’s impossible to determine correct means upfront in live-video-applications and because the values could change with perspectives, subjects, etc, the classifier also includes a simple form of online learning, which adjusts the means with every value that is classified.</p>
+<p></p>
+<p>To deal with the fact that a very large or a very small value is more significant than one near to the mean, the classifier returns a value between -1.0 (much lesser than mean) and +1.0 (much larger than mean). This value is also used as mass for the corresponding evidence. A multiplicative bias is added to the value to never allow 1.0 as mass, so the omega set is always contained and the conflict of combining two measure reduced.</p>
+<p></p>
+<p>The CSV Reader class offers a simple API to read information out of a .csv file with a specific structure. The delimiter of the file has to be a semicolon. The first row of the file has to contain the header information. The rest of the file are treated as the actual data. The data has to be convertible to the integer format. When creating a new CSVReader object the file is loaded and parsed so that the API calls are executed fast and without accessing the file itself.</p>
+<h1 id="build-and-execution">Build and Execution</h1>
+<p>If the make utility is available on the system, simply executing</p>
+<p>make all</p>
+<p>in the project folder will build the main executable and all tests.</p>
+<p></p>
+<p>To compile the main project without make, main.cpp, dempstershafer.cpp, csvreader.cpp and learningclassificator.cpp must be compiled and linked together.</p>
+<p></p>
+<p>make creates an executable named lab_exercise. It can be run from command line and receives one file with test data as argument. The format of the data file must be similar to the two provided files (which are included in the project folder as well).</p>
+<p></p>
+<p>The project executable iterates over all frames in the data file and classifies the displayed emotion. The output is commented and should be self-explanatory.</p>
+<p></p>
+<p>Details about how the classification works can be found in the API documentation of dempstershafer.hpp.</p>
+<p></p>
+<h3 id="invocation-example">Invocation Example:</h3>
+<p>project_folder$ ./lab_exercise test_data.csv</p>
+<h3 id="output-example">Output Example:</h3>
+<p>---------------------------------</p>
+<p>### Frame: 046 ###</p>
+<p>---------------------------------</p>
+<p>(-1.0: far below average, +1.0 far above average)</p>
+<p>Eye Aperture: 14 -&gt; -0.19</p>
+<p>Mouth Opening: 12 -&gt; -0.58</p>
+<p>Furrow Count: 443 -&gt; -0.25</p>
+<p>---------------------------------</p>
+<p>(#: Belief, -: Plausability, .: nothing)</p>
+<p>Fear | -------------.....................................</p>
+<p>Surprise | -------------.....................................</p>
+<p>Disdain | ----------------..................................</p>
+<p>Disgust | ####-----------------------------------...........</p>
+<p>Anger | ##########--------------------------------........</p>
+<p>---------------------------------</p>
+<p>classified as: anger</p>
+<p>---------------------------------</p>
+<h1 id="api-documentation">API Documentation</h1>
+<p>The three application parts introduced above provide complete API documentation in the corresponding C++-header-files.</p>
+<h1 id="test-and-validation">Test and Validation</h1>
+<p>The functionality of the three reusable APIs of the project are tested with unit tests. The interaction of the parts is tested by the lab exercise itself.</p>
+<p></p>
+<p>The Dempster-Shafer Library unit test uses an Dempster-Shafer exercise of an old exam. It creates a set of supects which are added to the universe. Based on witness statements focal and omega sets are created. The reference value are taken from the exam with a maximum variance of 0.001.</p>
+<p></p>
+<p>The Learning Classificator unit test creates a new classifier with an learning rate of 0.1. A feature with the value 100 is added. To test the classification a feature with the value of 100 is classified which results in zero variance. Then the online learning is tested by classifying two features with the value of 90. Each classification changes the average so that the two classifications don’t return the result. Then the cap is being tested by classifying a 1.0 (which results in an variance of -1.0) and a 10000 (which results in a variance of 1.0).</p>
+<p></p>
+<p>The CSV Reader unit test uses the provided test_data.csv file to test the reading of a .csv file. The test assumes that the test_data.csv file is unmodified. First the test checks the correctness of the number of columns and rows. Then the correctness of the header is being tested. Then the extraction of the first row and the fetching of a value via it’s columns name is tested.</p>
+<p></p>
+<p>To test the system as a whole, we calculated the results manually and then compared the values of the program with our manually evaluated results.</p>
+<h1 id="summary">Summary</h1>
+<p>The solution is fully functional and provides reasonable results for the given data. Yet, it may perform even better by adding more features and fine-tuning the learning rate of the classifier, the initial averages and the bias for evidence masses. To do this however, more preclassified test-data would be needed.</p>
+<p></p>
