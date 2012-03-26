@@ -1,32 +1,6 @@
 <p>KBS Lab-Exercise E019</p>
 <p>Emotion Classifier - based on Evidence Theory by Dempster-Shafer</p>
 <p></p>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-<p>Thilo Michael</p>
-<p>thilo.michael@gmail.com</p>
-<p>#0450945</p>
-<p>Jeffrey Jedele</p>
-<p>jeffrey.jedele@gmail.com</p>
-<p>#0491204</p>
-<h1 id="section"></h1>
-<h1 id="revision-history">Revision History</h1>
-<p></p>
-<p>Date</p>
-<p>Comment</p>
-<p>Author</p>
-<p>2012-03-04</p>
-<p>Initial</p>
-<p>Jeffrey Jedele</p>
-<p>2012-03-14</p>
-<p>CSV Reader &amp; Tests</p>
-<p>Thilo Michael</p>
 <h1 id="abstract">Abstract</h1>
 <p>With formal logic, every event can be either true or false. Bayesian Probability Theory extends this idea and allows us to assign a likelihood of being true to every possible event. Dempster-Shafer-Theory (DST) further generalizes this idea by:</p>
 <ol>
